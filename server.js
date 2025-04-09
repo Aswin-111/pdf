@@ -3,8 +3,11 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
+const cors = require("cors");
+
 const app = express();
 const PORT = 5000;
+app.use(cors());
 
 // Set up Multer storage
 const storage = multer.diskStorage({
@@ -15,6 +18,7 @@ const storage = multer.diskStorage({
     const uniqueName = `${Date.now()}-${file.originalname}`;
     cb(null, uniqueName);
   },
+  limits: { fileSize: 100 * 1024 * 1024 },
 });
 
 const upload = multer({ storage });
@@ -22,7 +26,9 @@ const upload = multer({ storage });
 // Serve static files
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use("/preview", express.static(path.join(__dirname, "public")));
-
+app.get("/", (req, res) => {
+  return res.send("Success");
+});
 // Upload route
 app.post("/upload", upload.single("pdf"), (req, res) => {
   const filename = req.file.filename;
