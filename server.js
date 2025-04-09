@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 // Upload route
 app.post("/upload", upload.single("pdf"), (req, res) => {
   const filename = req.file.filename;
-  const previewUrl = `http://ezbiz.co.in/page3/preview/viewer.html?file=${filename}`;
+  const previewUrl = `https://ezbiz.co.in/page3/preview/viewer.html?file=${filename}`;
   res.json({ success: true, previewUrl });
 });
 
