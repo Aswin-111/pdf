@@ -25,15 +25,22 @@ const upload = multer({ storage });
 
 // Serve static files
 app.use("/assets", express.static(path.join(__dirname, "assets")));
-app.use("/preview", express.static(path.join(__dirname, "public")));
 app.get("/", (req, res) => {
   return res.send("Success");
 });
 // Upload route
-app.post("/upload", upload.single("pdf"), (req, res) => {
-  const filename = req.file.filename;
-  const previewUrl = `https://ezbiz.co.in/page3/preview/viewer.html?file=${filename}`;
-  res.json({ success: true, previewUrl });
+app.post("/upload", upload.single("pdf"), async (req, res) => {
+  try {
+    const filename = req.file.filename;
+    const fileUrl = `https://ezbiz.co.in/assets/${filename}`; 
+
+    // 🔥 Send to WhatsApp
+
+    return res.json({ success: true, fileUrl });
+  } catch (err) {
+    console.error("Error uploading/sending:", err);
+    res.status(500).json({ success: false, message: "Upload failed." });
+  }
 });
 
 app.listen(PORT, (err) => {
